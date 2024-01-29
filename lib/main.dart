@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:troll_camera/views/camera_view.dart';
+import 'package:flutter/services.dart';
+import 'package:camera/camera.dart';
 
-void main() {
-  runApp(const MainApp());
-}
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  final cameras = await availableCameras();
 
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+  SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.manual,
+    overlays: [],
+  );
+
+  runApp(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: CameraView(
+        camera: cameras.first,
       ),
-    );
-  }
+    ),
+  );
 }
