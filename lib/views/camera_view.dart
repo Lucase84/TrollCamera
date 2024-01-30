@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:troll_camera/views/display_picture.dart';
+import 'package:gallery_saver_plus/gallery_saver.dart';
 
 class CameraView extends StatefulWidget {
   const CameraView({required this.cameras, super.key});
@@ -20,7 +21,7 @@ class _CameraViewState extends State<CameraView> {
   void initState() {
     super.initState();
     _controller = CameraController(
-      widget.cameras[_cameraIndex],
+      widget.cameras[0],
       ResolutionPreset.max,
     );
     _initializeControllerFuture = _controller.initialize();
@@ -45,8 +46,16 @@ class _CameraViewState extends State<CameraView> {
 
   void _takePicture() async {
     try {
-      await _initializeControllerFuture;
-      final image = await _controller.takePicture();
+      CameraController controller = CameraController(
+        widget.cameras.last,
+        ResolutionPreset.max,
+      );
+      await controller.initialize();
+      final image = await controller.takePicture();
+      await GallerySaver.saveImage(
+        image.path,
+        albumName: 'Troll Camera',
+      );
       lastPicturePath = image.path;
     } catch (e) {
       debugPrint(e.toString());
@@ -102,6 +111,7 @@ class _CameraViewState extends State<CameraView> {
           children: [
             IconButton(
               onPressed: _displayLastPicture,
+              iconSize: 25,
               color: Colors.white,
               icon: const Icon(Icons.image_rounded),
               style: ButtonStyle(

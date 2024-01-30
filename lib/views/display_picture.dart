@@ -9,9 +9,13 @@ class DisplayPictureScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Image.file(
-        File(imagePath),
+    return Positioned(
+      top: 0,
+      bottom: 0,
+      child: Image(
+        image: FileImage(
+          File(imagePath),
+        ),
       ),
     );
   }
