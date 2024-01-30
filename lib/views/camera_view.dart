@@ -1,11 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:troll_camera/views/display_picture.dart';
+import 'package:flutter/material.dart';
 import 'package:gallery_saver_plus/gallery_saver.dart';
+import 'package:troll_camera/views/display_picture.dart';
 
+/// The camera view
 class CameraView extends StatefulWidget {
+  /// Constructor for the camera view that takes the list of available cameras
   const CameraView({required this.cameras, super.key});
 
+  /// The list of available cameras
   final List<CameraDescription> cameras;
   @override
   State<CameraView> createState() => _CameraViewState();
@@ -27,12 +30,6 @@ class _CameraViewState extends State<CameraView> {
     _initializeControllerFuture = _controller.initialize();
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   void _flipCamera() {
     setState(() {
       _cameraIndex = _cameraIndex == 0 ? 1 : 0;
@@ -44,14 +41,14 @@ class _CameraViewState extends State<CameraView> {
     });
   }
 
-  void _takePicture() async {
+  Future<void> _takePicture() async {
     try {
-      CameraController controller = CameraController(
+      final CameraController controller = CameraController(
         widget.cameras.last,
         ResolutionPreset.max,
       );
       await controller.initialize();
-      final image = await controller.takePicture();
+      final XFile image = await controller.takePicture();
       await GallerySaver.saveImage(
         image.path,
         albumName: 'Troll Camera',
@@ -62,11 +59,11 @@ class _CameraViewState extends State<CameraView> {
     }
   }
 
-  void _displayLastPicture() async {
+  Future<void> _displayLastPicture() async {
     if (lastPicturePath.isNotEmpty) {
       await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => DisplayPictureScreen(
+        MaterialPageRoute<DisplayPictureScreen>(
+          builder: (BuildContext context) => DisplayPictureScreen(
             imagePath: lastPicturePath,
           ),
         ),
@@ -78,13 +75,13 @@ class _CameraViewState extends State<CameraView> {
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.bottomCenter,
-      children: [
+      children: <Widget>[
         FutureBuilder<void>(
           future: _initializeControllerFuture,
-          builder: (context, snapshot) {
+          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return Stack(
-                children: [
+                children: <Widget>[
                   Positioned(
                     top: 0,
                     bottom: 0,
@@ -105,10 +102,10 @@ class _CameraViewState extends State<CameraView> {
   Widget _rowOfButtons() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
-      children: [
+      children: <Widget>[
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
+          children: <Widget>[
             IconButton(
               onPressed: _displayLastPicture,
               iconSize: 25,
@@ -120,7 +117,7 @@ class _CameraViewState extends State<CameraView> {
                 ),
               ),
             ),
-            Container(
+            DecoratedBox(
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.transparent,

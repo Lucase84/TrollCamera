@@ -1,16 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:troll_camera/views/camera_view.dart';
-import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:troll_camera/views/camera_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final cameras = await availableCameras();
+  final List<CameraDescription> cameras = await availableCameras();
 
-  SystemChrome.setEnabledSystemUIMode(
+  await SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.manual,
-    overlays: [],
+    overlays: <SystemUiOverlay>[],
   );
 
   runApp(

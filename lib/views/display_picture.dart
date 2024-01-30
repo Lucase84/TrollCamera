@@ -2,10 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+/// The screen that displays the picture taken by the camera
 class DisplayPictureScreen extends StatelessWidget {
-  final String imagePath;
+  /// Constructor for the display picture screen that takes the path of the image
+  const DisplayPictureScreen({required this.imagePath, super.key});
 
-  const DisplayPictureScreen({super.key, required this.imagePath});
+  /// The path of the image to display
+  final String imagePath;
 
   @override
   Widget build(BuildContext context) {
