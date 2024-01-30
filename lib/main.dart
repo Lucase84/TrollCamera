@@ -17,7 +17,7 @@ Future<void> main() async {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       home: CameraView(
-        camera: cameras.first,
+        cameras: cameras,
       ),
     ),
   );
